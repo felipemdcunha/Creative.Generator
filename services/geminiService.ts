@@ -4,7 +4,10 @@ import { urlToBase64 } from "../lib/utils";
 
 // Ensure API Key is available
 const getAI = () => {
-  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
+  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+  if (!apiKey) {
+    console.error("API Key is missing! Please check your environment variables (GEMINI_API_KEY).");
+  }
   return new GoogleGenAI({ apiKey });
 };
 
