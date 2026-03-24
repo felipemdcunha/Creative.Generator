@@ -4,10 +4,20 @@ import { urlToBase64 } from "../lib/utils";
 
 // Ensure API Key is available
 const getAI = () => {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+  // Check multiple potential environment variable sources
+  const apiKey = 
+    process.env.GEMINI_API_KEY || 
+    process.env.API_KEY || 
+    (import.meta.env && import.meta.env.VITE_GEMINI_API_KEY) ||
+    '';
+
   if (!apiKey) {
-    console.error("API Key is missing! Please check your environment variables (GEMINI_API_KEY).");
+    const errorMsg = "API Key is missing! Please ensure GEMINI_API_KEY is set in your project secrets and re-publish the app.";
+    console.error(errorMsg);
+    // We throw a clear error that will be caught by the UI
+    throw new Error(errorMsg);
   }
+  
   return new GoogleGenAI({ apiKey });
 };
 
